@@ -46,4 +46,13 @@ class PostRepositoryTest {
         Post reloaded = posts.save(post);
         assertNotNull(reloaded.getId());
     }
+
+    @Test
+    void shouldSaveValidPostWithoutAuthor() {
+        Post post = new Post( "TEST", "...",null);
+        assertNull(post.getId());
+        Post reloaded = posts.save(post);
+        assertNotNull(reloaded.getId());
+        assertNull(reloaded.getAuthor());
+    }
 }
