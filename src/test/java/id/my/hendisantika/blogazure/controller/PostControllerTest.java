@@ -1,9 +1,19 @@
 package id.my.hendisantika.blogazure.controller;
 
+import id.my.hendisantika.blogazure.model.Post;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
+
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,5 +30,16 @@ import org.springframework.test.context.ActiveProfiles;
 class PostControllerTest {
 
     @Autowired
-    TestRestTemplate restTemplate;
+    private TestRestTemplate restTemplate;
+
+    @Test
+    void shouldFindAllPosts() {
+        ResponseEntity<List<Post>> exchange = restTemplate.exchange("/api/posts", HttpMethod.GET, null, new ParameterizedTypeReference<List<Post>>() {});
+        assertNotNull(exchange);
+        List<Post> posts = exchange.getBody();
+        assertEquals(1,posts.size());
+        assertEquals( 1,posts.get(0).getAuthor().getId());
+        assertEquals(2,posts.get(0).getComments().size());
+    }
+
 }
