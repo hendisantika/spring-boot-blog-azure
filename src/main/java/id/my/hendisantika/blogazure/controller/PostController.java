@@ -6,6 +6,7 @@ import id.my.hendisantika.blogazure.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -31,5 +32,10 @@ public class PostController {
     @GetMapping
     public Iterable<Post> findAll() {
         return posts.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public Post findById(@PathVariable("id") Post post) {
+        return post;
     }
 }
