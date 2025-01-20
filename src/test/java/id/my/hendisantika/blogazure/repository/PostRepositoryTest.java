@@ -1,11 +1,16 @@
 package id.my.hendisantika.blogazure.repository;
 
 import id.my.hendisantika.blogazure.model.Author;
+import id.my.hendisantika.blogazure.model.Post;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.test.context.ActiveProfiles;
+
+import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,5 +37,13 @@ class PostRepositoryTest {
     @BeforeEach
     void setUp() {
         author = AggregateReference.to(authors.save(new Author(null, "Megumi", "Fushiguro", "megumi@yopmail.com", "megumi")).id());
+    }
+
+    @Test
+    void shouldSaveValidPost() {
+        Post post = new Post( "TEST", "...",author);
+        assertNull(post.getId());
+        Post reloaded = posts.save(post);
+        assertNotNull(reloaded.getId());
     }
 }
