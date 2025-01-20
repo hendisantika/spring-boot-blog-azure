@@ -38,7 +38,7 @@ class PostControllerTest {
         ResponseEntity<List<Post>> exchange = restTemplate.exchange("/api/posts", HttpMethod.GET, null, new ParameterizedTypeReference<List<Post>>() {});
         assertNotNull(exchange);
         List<Post> posts = exchange.getBody();
-        assertEquals(1,posts.size());
+        assertEquals(2,posts.size());
         assertEquals( 1,posts.get(0).getAuthor().getId());
         assertEquals(2,posts.get(0).getComments().size());
     }

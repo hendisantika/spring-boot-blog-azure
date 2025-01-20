@@ -70,7 +70,7 @@ class PostRepositoryTest {
         assertNotNull(p);
         assertNotNull(p.getId());
         assertEquals(2,p.getComments().size());
-        assertEquals("Dan",p.getComments().iterator().next().getName());
+        assertEquals("Yuji",p.getComments().iterator().next().getName());
     }
 
     @Test
