@@ -1,0 +1,19 @@
+spring.application.name: spring-boot-blog-azure
+management:
+  endpoints:
+    web:
+      exposure:
+        include: '*'
+  info:
+    env:
+      enabled: true
+
+info:
+  application:
+    name: spring-blog
+    description: A blog with articles about The Spring Framework.
+    author: Hendi Santika
+    version: '@project.version@'
+spring:
+  profiles:
+    active: dev
