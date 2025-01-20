@@ -1,5 +1,6 @@
 package id.my.hendisantika.blogazure.controller;
 
+import id.my.hendisantika.blogazure.dto.PostDetails;
 import id.my.hendisantika.blogazure.model.Post;
 import id.my.hendisantika.blogazure.repository.AuthorRepository;
 import id.my.hendisantika.blogazure.repository.PostRepository;
@@ -37,5 +38,11 @@ public class PostController {
     @GetMapping("/{id}")
     public Post findById(@PathVariable("id") Post post) {
         return post;
+    }
+
+    @GetMapping("/{id}/details")
+    public PostDetails getPostDetails(@PathVariable("id") Post post) {
+        log.info("Post Details called for: {}", post.getId());
+        return new PostDetails(post,authors.findById(post.getAuthor().getId()).get());
     }
 }
