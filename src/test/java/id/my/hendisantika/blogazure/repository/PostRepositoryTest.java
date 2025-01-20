@@ -72,4 +72,13 @@ class PostRepositoryTest {
         assertEquals(2,p.getComments().size());
         assertEquals("Dan",p.getComments().iterator().next().getName());
     }
+
+    @Test
+    void shouldPostWithNoCommentsReturns0AndNotNull() {
+        Post post = new Post( "TEST", "...",null);
+        posts.save(post);
+        Post p = posts.findById(post.getId()).orElse(null);
+        assertNotNull(p);
+        assertEquals(0,p.getComments().size());
+    }
 }
