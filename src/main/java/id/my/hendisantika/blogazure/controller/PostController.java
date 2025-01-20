@@ -1,9 +1,11 @@
 package id.my.hendisantika.blogazure.controller;
 
+import id.my.hendisantika.blogazure.model.Post;
 import id.my.hendisantika.blogazure.repository.AuthorRepository;
 import id.my.hendisantika.blogazure.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -26,4 +28,8 @@ public class PostController {
     private final PostRepository posts;
     private final AuthorRepository authors;
 
+    @GetMapping
+    public Iterable<Post> findAll() {
+        return posts.findAll();
+    }
 }
