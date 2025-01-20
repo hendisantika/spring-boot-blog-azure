@@ -1,6 +1,7 @@
 package id.my.hendisantika.blogazure.repository;
 
 import id.my.hendisantika.blogazure.model.Author;
+import id.my.hendisantika.blogazure.model.Comment;
 import id.my.hendisantika.blogazure.model.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +10,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
+
 import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
 /**
@@ -54,5 +58,18 @@ class PostRepositoryTest {
         Post reloaded = posts.save(post);
         assertNotNull(reloaded.getId());
         assertNull(reloaded.getAuthor());
+    }
+
+    @Test
+    void shouldPostWithComments() {
+        Post post = new Post( "TEST", "...",null);
+        post.addComments(List.of(new Comment("Yuji","test comment"),new Comment("Gojo","test comment 2")));
+        posts.save(post);
+
+        Post p = posts.findById(post.getId()).orElse(null);
+        assertNotNull(p);
+        assertNotNull(p.getId());
+        assertEquals(2,p.getComments().size());
+        assertEquals("Dan",p.getComments().iterator().next().getName());
     }
 }
