@@ -15,7 +15,7 @@
     <description>spring-boot-blog-azure</description>
     <properties>
         <java.version>23</java.version>
-        <testcontainers.version>2.0.0</testcontainers.version>
+        <testcontainers.version>2.0.1</testcontainers.version>
         <lombok.version>1.18.42</lombok.version>
     </properties>
     <dependencies>
