@@ -1,33 +1,64 @@
 name: AzureSpringCloud
-on: push
+on:
+  push:
+  pull_request:
+    branches: [ main ]
 env:
   ASC_PACKAGE_PATH: ${{ github.workspace }}
-  JAVA_VERSION: 23
+  JAVA_VERSION: 25
   AZURE_SUBSCRIPTION: c70085e6-c3ce-4d50-b40c-d03cb762d680
 
 jobs:
-  deploy_to_production:
+  build:
     runs-on: ubuntu-latest
-    name: deploy to production with artifact
+    name: build and test
     steps:
       - name: Checkout Github Action
         uses: actions/checkout@v7
-        
+
       - name: Set up JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v6
         with:
+          distribution: temurin
           java-version: ${{ env.JAVA_VERSION }}
+          cache: maven
 
-      - name: maven build, clean
-        run: |
-          mvn clean package -DskipTests
+      - name: maven build, test
+        run: ./mvnw -B clean verify
+
+      - name: upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-jar
+          path: target/*.jar
+
+  deploy_to_production:
+    runs-on: ubuntu-latest
+    name: deploy to production with artifact
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+    steps:
+      - name: Skip deploy when Azure credentials are missing
+        if: env.AZURE_CREDENTIALS == ''
+        run: echo "::notice::AZURE_CREDENTIALS secret is not set, skipping deployment."
+
+      - name: download artifact
+        if: env.AZURE_CREDENTIALS != ''
+        uses: actions/download-artifact@v4
+        with:
+          name: app-jar
+          path: target
 
       - name: Login via Azure CLI
+        if: env.AZURE_CREDENTIALS != ''
         uses: azure/login@v3
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: deploy to production with artifact
+        if: env.AZURE_CREDENTIALS != ''
         uses: azure/spring-cloud-deploy@v1
         with:
           azure-subscription: ${{ env.AZURE_SUBSCRIPTION }}
