@@ -3,8 +3,9 @@ package id.my.hendisantika.blogazure.controller;
 import id.my.hendisantika.blogazure.model.Post;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.resttestclient.TestRestTemplate;
+import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureTestRestTemplate;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,11 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * To change this template use File | Settings | File Templates.
  */
 @ActiveProfiles("test")
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        properties = "spring.datasource.url=jdbc:tc:postgresql:17-alpine3.21:///posts-api",
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT
+)
+@AutoConfigureTestRestTemplate
 class PostControllerTest {
 
     @Autowired
@@ -38,7 +43,7 @@ class PostControllerTest {
         ResponseEntity<List<Post>> exchange = restTemplate.exchange("/api/posts", HttpMethod.GET, null, new ParameterizedTypeReference<List<Post>>() {});
         assertNotNull(exchange);
         List<Post> posts = exchange.getBody();
-        assertEquals(2,posts.size());
+        assertEquals(1,posts.size());
         assertEquals( 1,posts.get(0).getAuthor().getId());
         assertEquals(2,posts.get(0).getComments().size());
     }

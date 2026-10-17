@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Created by IntelliJ IDEA.
@@ -28,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.assertNull;
  */
 @SpringBootTest
 @ActiveProfiles("test")
+@Transactional
 class PostRepositoryTest {
 
     @Autowired
@@ -70,7 +73,7 @@ class PostRepositoryTest {
         assertNotNull(p);
         assertNotNull(p.getId());
         assertEquals(2,p.getComments().size());
-        assertEquals("Yuji",p.getComments().iterator().next().getName());
+        assertTrue(p.getComments().stream().anyMatch(c -> "Yuji".equals(c.getName())));
     }
 
     @Test
