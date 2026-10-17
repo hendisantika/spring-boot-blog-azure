@@ -1,15 +1,12 @@
 package id.my.hendisantika.blogazure.json;
 
-import com.fasterxml.jackson.core.JacksonException;
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.TreeNode;
-import com.fasterxml.jackson.databind.DeserializationContext;
-import com.fasterxml.jackson.databind.JsonDeserializer;
 import id.my.hendisantika.blogazure.model.Author;
-import org.springframework.boot.jackson.JsonComponent;
+import org.springframework.boot.jackson.JacksonComponent;
 import org.springframework.data.jdbc.core.mapping.AggregateReference;
-
-import java.io.IOException;
+import tools.jackson.core.JsonParser;
+import tools.jackson.databind.DeserializationContext;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ValueDeserializer;
 
 /**
  * Created by IntelliJ IDEA.
@@ -21,12 +18,12 @@ import java.io.IOException;
  * Time: 12.00
  * To change this template use File | Settings | File Templates.
  */
-@JsonComponent
-public class AuthorDeserializer extends JsonDeserializer<AggregateReference<Author,Integer>> {
+@JacksonComponent
+public class AuthorDeserializer extends ValueDeserializer<AggregateReference<Author,Integer>> {
 
     @Override
-    public AggregateReference<Author, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException {
-        TreeNode treeNode = jsonParser.getCodec().readTree(jsonParser);
-        return AggregateReference.to(Integer.parseInt( treeNode.get("id").toString() ));
+    public AggregateReference<Author, Integer> deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) {
+        JsonNode jsonNode = deserializationContext.readTree(jsonParser);
+        return AggregateReference.to(jsonNode.get("id").asInt());
     }
 }
