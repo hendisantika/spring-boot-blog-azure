@@ -27,7 +27,7 @@ jobs:
         run: ./mvnw -B clean verify
 
       - name: upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: app-jar
           path: target/*.jar
@@ -46,7 +46,7 @@ jobs:
 
       - name: download artifact
         if: env.AZURE_CREDENTIALS != ''
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           name: app-jar
           path: target
